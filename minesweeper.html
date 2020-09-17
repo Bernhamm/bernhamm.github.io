@@ -1,0 +1,542 @@
+<html>
+<head>
+	<title>MineSweeper</title>
+</head>
+<body bgcolor="#C0C0C0">
+<script type="text/javascript">
+
+	var gridChars = [
+				[ [ 1, 1, 0 ], [ 1, 0, 1 ], [ 1, 1, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ] ],
+				[ [ 1, 1, 0 ], [ 1, 0, 1 ], [ 1, 1, 0 ], [ 1, 0, 1 ], [ 1, 1, 1 ] ], 
+				[ [ 0, 1, 1 ], [ 1, 0, 0 ], [ 1, 0, 0 ], [ 1, 0, 0 ], [ 0, 1, 1 ] ], 
+				[ [ 1, 1, 0 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 1, 0 ] ],
+				[ [ 1, 1, 1 ], [ 1, 0, 0 ], [ 1, 1, 1 ], [ 1, 0, 0 ], [ 1, 1, 1 ] ],
+				[ [ 1, 1, 1 ], [ 1, 0, 0 ], [ 1, 1, 1 ], [ 1, 0, 0 ], [ 1, 0, 0 ] ],
+				[ [ 1, 1, 1 ], [ 1, 0, 0 ], [ 1, 0, 0 ], [ 1, 0, 1 ], [ 1, 1, 1 ] ],
+				[ [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 1, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ] ],
+				[ [ 0, 1, 0 ], [ 0, 1, 0 ], [ 0, 1, 0 ], [ 0, 1, 0 ], [ 0, 1, 0 ] ],
+				[ [ 0, 0, 1 ], [ 0, 0, 1 ], [ 0, 0, 1 ], [ 1, 0, 1 ], [ 0, 1, 0 ] ],
+				[ [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 1, 0 ], [ 1, 0, 1 ], [ 1, 0, 1 ] ],
+				[ [ 1, 0, 0 ], [ 1, 0, 0 ], [ 1, 0, 0 ], [ 1, 0, 0 ], [ 1, 1, 1 ] ],
+				[ [ 1, 0, 1 ], [ 1, 1, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ] ],
+				[ [ 1, 1, 0 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ] ],
+				[ [ 0, 1, 0 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 0, 1, 0 ] ],
+				[ [ 1, 1, 0 ], [ 1, 0, 1 ], [ 1, 1, 1 ], [ 1, 0, 0 ], [ 1, 0, 0 ] ],
+				[ [ 0, 1, 0 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 0, 1, 1 ] ],
+				[ [ 1, 1, 0 ], [ 1, 0, 1 ], [ 1, 1, 1 ], [ 1, 1, 0 ], [ 1, 0, 1 ] ],
+				[ [ 1, 1, 1 ], [ 1, 0, 0 ], [ 1, 1, 1 ], [ 0, 0, 1 ], [ 1, 1, 1 ] ],
+				[ [ 1, 1, 1 ], [ 0, 1, 0 ], [ 0, 1, 0 ], [ 0, 1, 0 ], [ 0, 1, 0 ] ],
+				[ [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 1, 1 ] ],
+				[ [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 0, 1, 0 ] ],
+				[ [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 1, 1 ], [ 1, 0, 1 ] ],
+				[ [ 1, 0, 1 ], [ 1, 0, 1 ], [ 0, 1, 0 ], [ 1, 0, 1 ], [ 1, 0, 1 ] ],
+				[ [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 1, 1 ], [ 0, 1, 0 ], [ 0, 1, 0 ] ],
+				[ [ 1, 1, 1 ], [ 0, 0, 1 ], [ 0, 1, 0 ], [ 1, 0, 0 ], [ 1, 1, 1 ] ] ];
+
+
+	// preload images
+
+	var timeDigits = new Array(10);
+	for (var i = 0; i <= 9; i++)
+	{
+		timeDigits[i] = new Image(23, 13);
+		strSrc = "http://d1.endata.cx/data/games/70231/time" + i + ".gif";
+		timeDigits[i].src = strSrc;
+	}
+
+	var timeNeg = new Image(23, 13);
+	timeNeg.src = "http://d1.endata.cx/data/games/70231/time-.gif";
+	
+	var cellOpenImage = new Array(9);
+	for (var i = 0; i <= 8; i++)
+	{
+		cellOpenImage[i] = new Image(16, 16);
+		strSrc = "http://d1.endata.cx/data/games/70231/open" + i + ".gif";
+		cellOpenImage[i].src = strSrc;
+	}
+
+	var bombRevealedImage = new Image(32, 32);
+	bombRevealedImage.src = "images/bombrevealed.gif";
+	
+	var bombRevealeModeImage = new Image(32, 32);
+	bombRevealeModeImage.src = "images/bombrevealmode.gif";
+
+	var bombFlaggedImage = new Image(32, 32);
+	bombFlaggedImage.src = "images/bombflagged.gif";
+
+	var blankImage = new Image(16, 16);
+	blankImage.src = "http://d1.endata.cx/data/games/70231/blank.gif";
+
+	var faceDeadImage = new Image(52, 52);
+	faceDeadImage.src = "images/facedead.gif";
+
+	var faceOohImage = new Image(52, 52);
+	faceOohImage.src = "images/facesmile.gif";
+
+	var faceSmileImage = new Image(52, 52);
+	faceSmileImage.src = "images/facesmile.gif";
+
+	var faceWinImage = new Image(52, 52);
+	faceWinImage.src = "images/facewin.gif";
+
+	var topImages = 8;
+
+	function imageIndexOf(x, y)
+	{
+		return x + (y + 2) * (gridW + 2) + topImages + 3;
+	}
+
+	function setCellImage(x, y, image)
+	{
+		document.images[imageIndexOf(x, y)].src = image.src;
+	}
+
+	function clearBoardImages()
+	{
+		for (var y = 0; y < gridH; y++)
+		{
+			for (var x = 0; x < gridW; x++)
+			{
+				if (document.images[imageIndexOf(x, y)].src != blankImage.src)
+					document.images[imageIndexOf(x, y)].src = blankImage.src;
+			}
+		}
+	}
+	
+	// cell marking 
+
+	var markedArray = new Array();
+
+	function point(x, y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+
+	function markCellToOpen(x, y)
+	{
+		if (!checkBounds(x, y))
+			return;
+
+		with (grid[y][x])
+		{
+			if (isMarked)
+				return;
+
+			isMarked = true;
+			markedArray.push(new point(x, y));
+
+			if (!isMine && neighbourBombs == 0)
+			{
+				for (var i = x - 1; i <= x + 1; i++)
+				{
+					for (var j = y - 1; j <= y + 1; j++)
+					{
+						if (checkBounds(i, j))
+							markCellToOpen(i, j);
+					}
+				}
+			}
+		}
+	}
+
+	// flags handling
+
+	var flaggedMines = 0;
+	var flagsLeft = 0;
+
+	function flagCell(x, y)
+	{
+		with (grid[y][x])
+		{
+			if (isExposed)
+				return;
+
+			if (isFlagged)
+			{
+				isFlagged = false;
+				flaggedMines--;
+				setCellImage(x, y, blankImage);
+			}
+			else
+			{
+				isFlagged = true;
+				flaggedMines++;
+				setCellImage(x, y, bombFlaggedImage);
+			}
+		}
+
+		updateNumFlags();
+	}
+
+	function updateNumFlags()
+	{
+		flagsLeft = totalMines - flaggedMines;
+
+		digit = Math.abs(flagsLeft % 10);
+		document.bomb1s.src = timeDigits[digit].src;
+
+		digit = Math.floor(Math.abs(flagsLeft / 10 % 10));
+		document.bomb10s.src = timeDigits[digit].src;
+
+		digit = Math.floor(Math.abs(flagsLeft / 100 % 10));
+		document.bomb100s.src = timeDigits[digit].src;
+		if (flagsLeft < 0)
+			document.bomb100s.src = timeNeg.src;
+	}
+
+	// game variables
+	
+	var win = false;
+	var dead = false;
+
+	var cellsOpen = 0;
+	var totalMines = 0;
+	var totalCells = 0; 
+
+	var street = 'qnwahtj';
+
+	function getCharCode(index)
+	{
+		return (street.charCodeAt(index) - "a".charCodeAt(0) + 17) % 26;
+	}
+
+	// grid building
+
+	var grid = new Array();
+
+	var maxCharOffset = 3;
+
+	var margin = 3;
+	var gridW = 0;	// grid width
+	var gridH = 5 + maxCharOffset; // grid height
+
+	// calculating gridW
+	for (var i = 0; i < street.length; i++)
+	{
+		var charIdx = getCharCode(i);
+		if (charIdx >= 0 && charIdx < gridChars.length)
+		{
+			// margin
+			if (i != 0)
+				gridW += margin;
+			gridW += gridChars[charIdx][0].length;
+	  }
+	}
+
+	function cell(mine)
+	{
+		this.isMine = mine;
+		this.isMarked = false;
+		this.isFlagged = false;
+		this.isExposed = false;
+		this.neighbourBombs = 0;
+	}
+
+	function checkBounds(x, y)
+	{
+		return (y >= 0 && y < grid.length &&
+						x >= 0 && x < grid[y].length);
+	}
+	
+	function isMine(x, y)
+	{
+		return (x >= 0 && x < grid[0].length &&
+						y >= 0 && y < grid.length &&
+						grid[y][x].isMine);
+	}
+
+	function neighbourMines(x, y)
+	{
+		var mines = 0;
+
+		for (var i = x - 1; i <= x + 1; i++)
+		{
+			for (var j = y - 1; j <= y + 1; j++)
+			{
+				if (isMine(i, j))
+					mines++;
+			}
+		}
+
+		if (isMine(x, y))
+			mines--;
+
+		return mines;
+	}
+
+	// grid operations
+
+	function openCell(x, y)
+	{
+		with (grid[y][x])
+		{
+			isExposed = true;
+			if (isMine)
+			{
+				dead = true;
+				document.face.src = faceDeadImage.src;
+				document.images[imageIndexOf(x, y)].src = bombRevealedImage.src;
+			}
+			else
+			{
+				cellsOpen++;
+				if (cellsOpen + totalMines == totalCells)
+				{
+					win = true;
+					document.face.src = faceWinImage.src;
+				}
+				document.images[imageIndexOf(x, y)].src = cellOpenImage[grid[y][x].neighbourBombs].src;
+			}
+		}
+	}
+
+	function openAllMarkedCells()
+	{
+		for (var i = 0; i < markedArray.length; i++)
+		{
+			with (markedArray[i])
+			{
+				openCell(x, y);
+			}
+		}
+
+		// TODO: unmark all cells
+		markedArray = [];
+	}
+
+	// grid event handlers
+
+	function cellClick(x, y, e)
+  {
+		if (dead || win)
+			return;
+
+		if (!checkBounds(x, y))
+			return;
+
+		document.face.src = faceSmileImage.src;
+
+		with (grid[y][x])
+		{
+			if (e != 2 && e.button != 2 && bombmode)
+			{
+				if (!isFlagged && !isExposed)
+				{
+					markCellToOpen(x, y);
+					openAllMarkedCells();
+				}
+			}
+			else
+			{
+				if (!isExposed)
+					flagCell(x, y);
+			}
+		}
+	}
+
+	function showMouseDown(e)
+	{
+		if (!dead && !win)
+			document.face.src = faceOohImage.src;
+	}
+
+	function faceClick()
+	{
+		prepareNewGame();
+	}
+	
+	var bombmode = true;
+	
+	function modeChange()
+	{
+		if (bombmode)
+		{
+			bombmode = false;
+			document.mode.src = bombFlaggedImage.src;			
+		}
+		else
+		{
+			bombmode = true;
+			document.mode.src = bombRevealeModeImage.src;		
+		}
+	}
+
+	// start new game
+
+	function createGrid()
+	{
+		grid = new Array(gridH);
+		for (var y = 0; y < gridH; y++)
+			grid[y] = new Array();
+
+		for (var i = 0; i < street.length; i++)
+		{
+			var charIdx = getCharCode(i);
+			if (charIdx >= 0 && charIdx < gridChars.length)
+			{
+				var charOffset = Math.floor(Math.random() * (maxCharOffset + 1));
+				for (var y = 0; y < gridH; y++)
+				{
+					// margin
+					if (i != 0)
+					{
+						for (var j = 0; j < margin; j++)
+							grid[y].push(new cell(false));
+					}
+
+					var lineIndex = y - charOffset;
+					//belong to letter
+					if (lineIndex >= 0 && lineIndex < gridChars[charIdx].length)
+					{
+						for (var j = 0; j < gridChars[charIdx][lineIndex].length; j++)
+							grid[y].push(new cell(gridChars[charIdx][lineIndex][j] == 1));
+					}
+					else	// empty
+					{
+						for (var j = 0; j < gridChars[charIdx][0].length; j++)
+							grid[y].push(new cell(false));
+					}
+				}
+			}
+		}
+
+		// calculating mines and neighbours
+		var mines = 0;
+		for (var y = 0; y < grid.length; y++)
+		{
+			for (var x = 0; x < grid[y].length; x++)
+			{
+				with (grid[y][x])
+				{
+					if (isMine)
+						mines++;
+					else
+						neighbourBombs = neighbourMines(x, y);
+				}
+			}
+		}
+
+		return mines;
+	}
+
+	function prepareNewGame()
+	{
+		win = false;
+		dead = false;
+		document.face.src = faceSmileImage.src;
+
+		clearBoardImages();
+
+		totalMines = createGrid();
+		
+		cellsOpen = 0;
+		totalCells = grid.length * grid[0].length;
+
+		flaggedMines = 0;
+		flagsLeft = totalMines;
+
+		updateNumFlags();
+	}
+
+	// disables mouse right button click context menu
+	function pressRightClick() { return false; }
+	document.oncontextmenu = pressRightClick;
+
+	// building html grid table
+	
+	
+	var cellSize = 50;
+	var smileMargin = (cellSize * gridW - 52 * 6 - 104 * 2) / 4;
+
+	//document.writeln('<table border="0"><tr><td nowrap="nowrap">');
+    document.write('<table cellpadding="0" cellspacing="0">');
+    document.write('<tr><td>');
+	document.write('<img src="http://d1.endata.cx/data/games/70231/bordertl.gif" height="20" width="20" alt="" name="bordertl" />');
+	for (j = 0; j < gridW; j++) 
+	{
+		document.write('<img src="http://d1.endata.cx/data/games/70231/bordertb.gif" height="20" width="'+cellSize+'" alt="" />'); 
+	}
+	document.writeln('<img src="http://d1.endata.cx/data/games/70231/bordertr.gif" height="20" width="20" alt="" />');
+
+    document.write('</tr></td>');
+
+// Build the top display (# bombs, face, clock)
+    document.write('<tr><td>');
+  document.write('<img src="http://d1.endata.cx/data/games/70231/borderlr.gif" height="104" width="20" alt="" />');
+
+  document.write('<a onclick="return bombCountClick()">');
+		document.write('<img src="http://d1.endata.cx/data/games/70231/time0.gif" border="0" name="bomb100s" width="52" height="92" alt="" />');
+		document.write('<img src="http://d1.endata.cx/data/games/70231/time0.gif" border="0" name="bomb10s" width="52" height="92" alt="" />');
+		document.write('<img src="http://d1.endata.cx/data/games/70231/time0.gif" border="0" name="bomb1s" width="52" height="92" alt="" />');
+	document.write('</a>');
+	
+  	document.write('<a onclick="return faceClick()">');
+		document.write('<img src="http://d1.endata.cx/data/games/70231/faceclock.gif" name="face" hspace="'+smileMargin+'" border="0" width="104" height="104" alt="" />');
+	document.write('</a>');
+	
+	document.write('<a onclick="return modeChange()">');
+		document.write('<img src="images/bombrevealmode.gif" name="mode" hspace="'+smileMargin+'" border="0" width="104" height="104" alt="" />');
+	document.write('</a>');
+
+	document.write('<img src="http://d1.endata.cx/data/games/70	231/time0.gif" border="0" name="time100s" width="52" height="92" alt="" />');
+	document.write('<img src="http://d1.endata.cx/data/games/70231/time0.gif" border="0" name="time10s" width="52" height="92" alt="" />');
+	document.write('<img src="http://d1.endata.cx/data/games/70231/time0.gif" border="0" name="time1s" width="52" height="92" alt="" />');
+
+  document.writeln('<img src="http://d1.endata.cx/data/games/70231/borderlr.gif" height="104" width="20" alt="" /><br />');
+
+    document.write('</tr></td>');
+
+// Line between title stuff and the board
+
+    document.write('<tr><td>');
+  document.write('<img src="http://d1.endata.cx/data/games/70231/borderjointl.gif" height="20" width="20" alt="" />');
+  for (j = 0; j < gridW; j++) 
+	{
+  	document.write('<img src="http://d1.endata.cx/data/games/70231/bordertb.gif" height="20" width="'+cellSize+'" alt="" />'); 
+	}
+  document.writeln('<img src="http://d1.endata.cx/data/games/70231/borderjointr.gif" height="20" width="20" alt="" />');
+
+    document.write('</tr></td>');
+	// Build the main grid itself, placing it on-screen.  Note the l/r edge
+  // Also, using a temp string to build line before display.  Speeds up display.
+  for (i = 0; i < gridH; i++) 
+	{
+        
+    document.write('<tr><td>');
+    document.write('<img src="http://d1.endata.cx/data/games/70231/borderlr.gif" height="'+cellSize+'" width="20" alt="" />');
+
+    for (j = 0; j < gridW; j++) 
+		{
+      document.write('<a ondragstart="ignoreDragging()" ondrag="ignoreDragging()" onmousedown="showMouseDown(event);" onmouseup="cellClick('+j+','+i+', event)">');
+     	document.write('<img src="http://d1.endata.cx/data/games/70231/blank.gif" name="cellIm'+j+'_'+i+'" border="0" height="'+cellSize+'" width="'+cellSize+'" alt="" />');
+			document.write('</a>');
+		}
+
+    document.writeln('<img src="http://d1.endata.cx/data/games/70231/borderlr.gif" border="0" height="'+cellSize+'" width="20" alt="" />'); 
+    document.write('</tr></td>');
+	}
+   
+  // Build the bottom line, including corners
+    document.write('<tr><td>');
+  document.write('<img src="http://d1.endata.cx/data/games/70231/borderbl.gif" height="20" width="20" alt="" />');
+
+  for (j = 0; j < gridW; j++) 
+	{
+    document.write('<img src="http://d1.endata.cx/data/games/70231/bordertb.gif" height="20" width="'+cellSize+'" alt="" />'); 
+	}
+
+  document.writeln('<img src="http://d1.endata.cx/data/games/70231/borderbr.gif" height="20" width="20" alt="" /><br />');
+
+    document.write('</tr></td>');
+    document.write('</table>');
+	//document.writeln('</td></tr></table>');
+
+	// everything ready, starting game
+	prepareNewGame();
+
+</script>
+</body>
+
+</html>
+
