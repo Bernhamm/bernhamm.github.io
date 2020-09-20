@@ -6,7 +6,7 @@
 <script type="text/javascript">
 
 	var gridChars = [
-				[ [ 1, 1, 0 ], [ 1, 0, 1 ], [ 1, 1, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ] ],
+				[ [ 0, 1, 0 ], [ 1, 0, 1 ], [ 1, 1, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ] ],
 				[ [ 1, 1, 0 ], [ 1, 0, 1 ], [ 1, 1, 0 ], [ 1, 0, 1 ], [ 1, 1, 1 ] ], 
 				[ [ 0, 1, 1 ], [ 1, 0, 0 ], [ 1, 0, 0 ], [ 1, 0, 0 ], [ 0, 1, 1 ] ], 
 				[ [ 1, 1, 0 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 0, 1 ], [ 1, 1, 0 ] ],
@@ -40,18 +40,18 @@
 	for (var i = 0; i <= 9; i++)
 	{
 		timeDigits[i] = new Image(23, 13);
-		strSrc = "http://d1.endata.cx/data/games/70231/time" + i + ".gif";
+		strSrc = "images/time" + i + ".gif";
 		timeDigits[i].src = strSrc;
 	}
 
 	var timeNeg = new Image(23, 13);
-	timeNeg.src = "http://d1.endata.cx/data/games/70231/time-.gif";
+	timeNeg.src = "images/time-.gif";
 	
 	var cellOpenImage = new Array(9);
 	for (var i = 0; i <= 8; i++)
 	{
 		cellOpenImage[i] = new Image(16, 16);
-		strSrc = "http://d1.endata.cx/data/games/70231/open" + i + ".gif";
+		strSrc = "images/open" + i + ".gif";
 		cellOpenImage[i].src = strSrc;
 	}
 
@@ -65,7 +65,7 @@
 	bombFlaggedImage.src = "images/bombflagged.gif";
 
 	var blankImage = new Image(16, 16);
-	blankImage.src = "http://d1.endata.cx/data/games/70231/blank.gif";
+	blankImage.src = "images/blank.gif";
 
 	var faceDeadImage = new Image(52, 52);
 	faceDeadImage.src = "images/facedead.gif";
@@ -208,7 +208,7 @@
 	var maxCharOffset = 3;
 
 	var margin = 3;
-	var gridW = 0;	// grid width
+	var gridW = 2;	// grid width initialized with margin
 	var gridH = 5 + maxCharOffset; // grid height
 
 	// calculating gridW
@@ -368,7 +368,10 @@
 	{
 		grid = new Array(gridH);
 		for (var y = 0; y < gridH; y++)
+		{
 			grid[y] = new Array();
+			grid[y].push(new cell(false));
+		}
 
 		for (var i = 0; i < street.length; i++)
 		{
@@ -399,6 +402,11 @@
 					}
 				}
 			}
+		}
+		
+		for (var y = 0; y < gridH; y++)
+		{
+			grid[y].push(new cell(false));
 		}
 
 		// calculating mines and neighbours
@@ -452,50 +460,50 @@
 	//document.writeln('<table border="0"><tr><td nowrap="nowrap">');
     document.write('<table cellpadding="0" cellspacing="0">');
     document.write('<tr><td>');
-	document.write('<img src="http://d1.endata.cx/data/games/70231/bordertl.gif" height="20" width="20" alt="" name="bordertl" />');
+	document.write('<img src="images/bordertl.gif" height="20" width="20" alt="" name="bordertl" />');
 	for (j = 0; j < gridW; j++) 
 	{
-		document.write('<img src="http://d1.endata.cx/data/games/70231/bordertb.gif" height="20" width="'+cellSize+'" alt="" />'); 
+		document.write('<img src="images/bordertb.gif" height="20" width="'+cellSize+'" alt="" />'); 
 	}
-	document.writeln('<img src="http://d1.endata.cx/data/games/70231/bordertr.gif" height="20" width="20" alt="" />');
+	document.writeln('<img src="images/bordertr.gif" height="20" width="20" alt="" />');
 
     document.write('</tr></td>');
 
 // Build the top display (# bombs, face, clock)
     document.write('<tr><td>');
-  document.write('<img src="http://d1.endata.cx/data/games/70231/borderlr.gif" height="104" width="20" alt="" />');
+  document.write('<img src="images/borderlr.gif" height="104" width="20" alt="" />');
 
   document.write('<a onclick="return bombCountClick()">');
-		document.write('<img src="http://d1.endata.cx/data/games/70231/time0.gif" border="0" name="bomb100s" width="52" height="92" alt="" />');
-		document.write('<img src="http://d1.endata.cx/data/games/70231/time0.gif" border="0" name="bomb10s" width="52" height="92" alt="" />');
-		document.write('<img src="http://d1.endata.cx/data/games/70231/time0.gif" border="0" name="bomb1s" width="52" height="92" alt="" />');
+		document.write('<img src="images/time0.gif" border="0" name="bomb100s" width="52" height="92" alt="" />');
+		document.write('<img src="images/time0.gif" border="0" name="bomb10s" width="52" height="92" alt="" />');
+		document.write('<img src="images/time0.gif" border="0" name="bomb1s" width="52" height="92" alt="" />');
 	document.write('</a>');
 	
   	document.write('<a onclick="return faceClick()">');
-		document.write('<img src="http://d1.endata.cx/data/games/70231/faceclock.gif" name="face" hspace="'+smileMargin+'" border="0" width="104" height="104" alt="" />');
+		document.write('<img src="images/faceclock.gif" name="face" hspace="'+smileMargin+'" border="0" width="104" height="104" alt="" />');
 	document.write('</a>');
 	
 	document.write('<a onclick="return modeChange()">');
 		document.write('<img src="images/bombrevealmode.gif" name="mode" hspace="'+smileMargin+'" border="0" width="104" height="104" alt="" />');
 	document.write('</a>');
 
-	document.write('<img src="http://d1.endata.cx/data/games/70	231/time0.gif" border="0" name="time100s" width="52" height="92" alt="" />');
-	document.write('<img src="http://d1.endata.cx/data/games/70231/time0.gif" border="0" name="time10s" width="52" height="92" alt="" />');
-	document.write('<img src="http://d1.endata.cx/data/games/70231/time0.gif" border="0" name="time1s" width="52" height="92" alt="" />');
+	document.write('<img src="images/time0.gif" border="0" name="time100s" width="52" height="92" alt="" />');
+	document.write('<img src="images/time0.gif" border="0" name="time10s" width="52" height="92" alt="" />');
+	document.write('<img src="images/time0.gif" border="0" name="time1s" width="52" height="92" alt="" />');
 
-  document.writeln('<img src="http://d1.endata.cx/data/games/70231/borderlr.gif" height="104" width="20" alt="" /><br />');
+  document.writeln('<img src="images/borderlr.gif" height="104" width="20" alt="" /><br />');
 
     document.write('</tr></td>');
 
 // Line between title stuff and the board
 
     document.write('<tr><td>');
-  document.write('<img src="http://d1.endata.cx/data/games/70231/borderjointl.gif" height="20" width="20" alt="" />');
+  document.write('<img src="images/borderjointl.gif" height="20" width="20" alt="" />');
   for (j = 0; j < gridW; j++) 
 	{
-  	document.write('<img src="http://d1.endata.cx/data/games/70231/bordertb.gif" height="20" width="'+cellSize+'" alt="" />'); 
+  	document.write('<img src="images/bordertb.gif" height="20" width="'+cellSize+'" alt="" />'); 
 	}
-  document.writeln('<img src="http://d1.endata.cx/data/games/70231/borderjointr.gif" height="20" width="20" alt="" />');
+  document.writeln('<img src="images/borderjointr.gif" height="20" width="20" alt="" />');
 
     document.write('</tr></td>');
 	// Build the main grid itself, placing it on-screen.  Note the l/r edge
@@ -504,29 +512,29 @@
 	{
         
     document.write('<tr><td>');
-    document.write('<img src="http://d1.endata.cx/data/games/70231/borderlr.gif" height="'+cellSize+'" width="20" alt="" />');
+    document.write('<img src="images/borderlr.gif" height="'+cellSize+'" width="20" alt="" />');
 
     for (j = 0; j < gridW; j++) 
 		{
       document.write('<a ondragstart="ignoreDragging()" ondrag="ignoreDragging()" onmousedown="showMouseDown(event);" onmouseup="cellClick('+j+','+i+', event)">');
-     	document.write('<img src="http://d1.endata.cx/data/games/70231/blank.gif" name="cellIm'+j+'_'+i+'" border="0" height="'+cellSize+'" width="'+cellSize+'" alt="" />');
+     	document.write('<img src="images/blank.gif" name="cellIm'+j+'_'+i+'" border="0" height="'+cellSize+'" width="'+cellSize+'" alt="" />');
 			document.write('</a>');
 		}
 
-    document.writeln('<img src="http://d1.endata.cx/data/games/70231/borderlr.gif" border="0" height="'+cellSize+'" width="20" alt="" />'); 
+    document.writeln('<img src="images/borderlr.gif" border="0" height="'+cellSize+'" width="20" alt="" />'); 
     document.write('</tr></td>');
 	}
    
   // Build the bottom line, including corners
     document.write('<tr><td>');
-  document.write('<img src="http://d1.endata.cx/data/games/70231/borderbl.gif" height="20" width="20" alt="" />');
+  document.write('<img src="images/borderbl.gif" height="20" width="20" alt="" />');
 
   for (j = 0; j < gridW; j++) 
 	{
-    document.write('<img src="http://d1.endata.cx/data/games/70231/bordertb.gif" height="20" width="'+cellSize+'" alt="" />'); 
+    document.write('<img src="images/bordertb.gif" height="20" width="'+cellSize+'" alt="" />'); 
 	}
 
-  document.writeln('<img src="http://d1.endata.cx/data/games/70231/borderbr.gif" height="20" width="20" alt="" /><br />');
+  document.writeln('<img src="images/borderbr.gif" height="20" width="20" alt="" /><br />');
 
     document.write('</tr></td>');
     document.write('</table>');
@@ -539,4 +547,3 @@
 </body>
 
 </html>
-
